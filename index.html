@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GAIA ROOTS — We are what we return to.</title>
+<link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.3.3/default/snipcart.css" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --soil:#1A0F08;--bark:#2E1A0D;--clay:#6B3F22;--umber:#956040;
+  --sand:#C8A87A;--flax:#D9C4A0;--linen:#EDE0C8;--cream:#F6F0E6;
+  --parch:#FAF7F2;--mist:#C2B49A;--stone:#8C7D6A;--ash:#6A5F52;
+  --moss:#3D5229;--fern:#2A3B1C;--sage:#6E8850;--leaf:#9AAF74;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;font-weight:300;background:var(--parch);color:var(--soil);overflow-x:hidden;line-height:1;}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)' opacity='1'/%3E%3C/svg%3E");opacity:.025;pointer-events:none;z-index:999;}
+.page{display:none;}.page.active{display:block;}
+
+/* ─── NAV ─── */
+#nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:1.4rem 5vw;display:flex;justify-content:space-between;align-items:center;transition:background .5s,padding .4s,border-color .5s;border-bottom:1px solid transparent;}
+#nav.scrolled{background:rgba(250,247,242,.97);padding:1rem 5vw;border-bottom-color:rgba(194,180,154,.3);}
+.nav-wordmark{font-family:'Cormorant',serif;font-size:.95rem;font-weight:500;letter-spacing:.35em;text-transform:uppercase;color:var(--soil);cursor:pointer;text-decoration:none;flex-shrink:0;}
+.nav-links{display:flex;gap:2rem;list-style:none;align-items:center;}
+.nav-links a{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--stone);cursor:pointer;text-decoration:none;transition:color .3s;}
+.nav-links a:hover{color:var(--soil);}
+.nav-pill{background:var(--soil)!important;color:var(--linen)!important;padding:.42rem 1.1rem;letter-spacing:.16em!important;}
+.nav-pill:hover{background:var(--bark)!important;}
+/* hamburger */
+.ham{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none;}
+.ham span{display:block;width:22px;height:1.5px;background:var(--soil);transition:all .35s;}
+.ham.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+.ham.open span:nth-child(2){opacity:0;}
+.ham.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+/* mobile nav drawer */
+.nav-drawer{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:var(--parch);z-index:190;flex-direction:column;justify-content:center;align-items:center;gap:2.5rem;opacity:0;transition:opacity .4s;}
+.nav-drawer.open{display:flex;opacity:1;}
+.nav-drawer a{font-family:'Cormorant',serif;font-size:2rem;font-weight:300;color:var(--soil);text-decoration:none;letter-spacing:.08em;cursor:pointer;}
+.nav-drawer a:hover{color:var(--clay);}
+
+/* ─── BUTTONS ─── */
+.btn{display:inline-flex;align-items:center;gap:.5rem;font-family:'DM Sans',sans-serif;font-weight:300;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;border:none;cursor:pointer;transition:all .35s;padding:.9rem 2rem;}
+.b-dark{background:var(--soil);color:var(--linen);}.b-dark:hover{background:var(--bark);}
+.b-line{background:transparent;color:var(--soil);border:1px solid var(--mist);}.b-line:hover{border-color:var(--clay);color:var(--clay);}
+.b-moss{background:var(--moss);color:var(--linen);}.b-moss:hover{background:var(--fern);}
+.b-linen{background:var(--linen);color:var(--soil);}.b-linen:hover{background:var(--flax);}
+.b-sand{background:transparent;color:var(--flax);border:1px solid rgba(217,196,160,.3);}.b-sand:hover{border-color:rgba(217,196,160,.6);}
+
+/* ─── EYEBROW ─── */
+.eyebrow{font-size:.5rem;letter-spacing:.42em;text-transform:uppercase;color:var(--sage);display:flex;align-items:center;gap:1rem;margin-bottom:2rem;}
+.eyebrow::before{content:'';display:block;width:2rem;height:1px;background:currentColor;opacity:.5;}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fU{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.anim{opacity:0;transform:translateY(24px);transition:opacity 1s ease,transform 1s ease;}
+.anim.in{opacity:1;transform:translateY(0);}
+.mline{opacity:0;transform:translateY(12px);transition:opacity .9s ease,transform .9s ease;}
+.mline.in{opacity:1;transform:translateY(0);}
+
+/* ═══════════════════════════════
+   HOMEPAGE
+═══════════════════════════════ */
+
+/* HERO */
+.hero{display:grid;grid-template-columns:55% 45%;min-height:100vh;}
+.hero-l{background:var(--soil);position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:9rem 6vw 5rem;}
+.hero-r{background:var(--linen);display:flex;flex-direction:column;justify-content:center;padding:9rem 6vw 5rem;}
+.root-art{position:absolute;inset:0;opacity:.13;pointer-events:none;}
+.hero-brand{font-family:'Cormorant',serif;font-size:clamp(3.8rem,8vw,7.5rem);font-weight:300;line-height:.87;color:var(--linen);position:relative;z-index:1;animation:fU 1.5s ease both .4s;}
+.hero-tagline{font-family:'Cormorant',serif;font-size:clamp(1rem,1.5vw,1.2rem);font-weight:300;font-style:italic;color:var(--sand);margin-top:2rem;position:relative;z-index:1;animation:fU 1.5s ease both .65s;}
+.hero-r-sub{font-family:'Cormorant',serif;font-size:clamp(1.3rem,2vw,2rem);font-weight:300;line-height:1.45;color:var(--soil);margin-bottom:1.2rem;animation:fU 1.2s ease both .4s;}
+.hero-r-body{font-size:.82rem;line-height:1.95;color:var(--stone);margin-bottom:2.5rem;animation:fU 1.2s ease both .55s;}
+.hero-btns{display:flex;flex-direction:column;gap:.75rem;align-items:flex-start;animation:fU 1.2s ease both .7s;}
+
+/* INTRO */
+.intro{padding:7rem 6vw;background:var(--cream);display:grid;grid-template-columns:auto 1fr;gap:6rem;align-items:center;}
+.intro-circle{opacity:.75;flex-shrink:0;}
+.intro-text{font-family:'Cormorant',serif;font-size:clamp(1.3rem,1.8vw,1.8rem);font-weight:300;line-height:1.65;color:var(--soil);}
+.intro-text em{font-style:italic;color:var(--clay);}
+.intro-sub{display:block;margin-top:1.8rem;font-family:'DM Sans',sans-serif;font-size:.84rem;font-style:normal;font-weight:300;color:var(--stone);line-height:2;}
+
+/* BOOK SECTION */
+.book-sec{padding:7rem 6vw;background:var(--parch);display:grid;grid-template-columns:1fr 1.1fr;gap:6rem;align-items:center;}
+.book-jacket{aspect-ratio:2/3;background:var(--soil);padding:2.2rem;display:flex;align-items:center;justify-content:center;max-width:340px;}
+.book-jacket-inner{border:1px solid rgba(200,168,122,.18);width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.8rem;text-align:center;}
+.jacket-title{font-family:'Cormorant',serif;font-size:1.8rem;font-weight:300;font-style:italic;color:var(--linen);line-height:1.2;margin-bottom:1.4rem;}
+.jacket-author{font-size:.52rem;letter-spacing:.38em;text-transform:uppercase;color:var(--sand);opacity:.6;}
+.book-quote{font-family:'Cormorant',serif;font-size:clamp(1.25rem,1.8vw,1.75rem);font-weight:300;font-style:italic;line-height:1.55;color:var(--soil);border-left:1px solid var(--clay);padding-left:2rem;margin-bottom:2rem;}
+.book-body{font-size:.84rem;line-height:2;color:var(--stone);margin-bottom:2.5rem;}
+.book-body p+p{margin-top:.9rem;}
+.book-btns{display:flex;gap:.8rem;flex-wrap:wrap;}
+
+/* SHOP PREVIEW */
+.shop-prev{padding:7rem 6vw;background:var(--linen);}
+.sp-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:1.2rem;gap:2rem;flex-wrap:wrap;}
+.sp-title{font-family:'Cormorant',serif;font-size:clamp(2.2rem,4vw,4rem);font-weight:300;line-height:1;color:var(--soil);}
+.sp-sub{font-size:.76rem;color:var(--stone);line-height:1.85;margin-bottom:3.5rem;}
+.sp-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;}
+.sp-card{background:var(--cream);padding:3.5rem 3rem;position:relative;cursor:pointer;transition:background .4s;}
+.sp-card:hover{background:var(--parch);}
+.sp-icon{margin-bottom:2rem;opacity:.5;}
+.sp-name{font-family:'Cormorant',serif;font-size:1.45rem;font-weight:300;color:var(--soil);margin-bottom:.7rem;}
+.sp-desc{font-size:.74rem;line-height:1.95;color:var(--stone);}
+.sp-arr{position:absolute;bottom:2.5rem;right:2.5rem;color:var(--mist);font-size:1.1rem;transition:color .3s,transform .3s;}
+.sp-card:hover .sp-arr{color:var(--clay);transform:translateX(5px);}
+
+/* COMMUNITY */
+.community{padding:7rem 6vw;background:var(--fern);display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;}
+.cm-title{font-family:'Cormorant',serif;font-size:clamp(2.5rem,4.5vw,5rem);font-weight:300;color:var(--linen);line-height:.95;margin-bottom:1.8rem;}
+.cm-body{font-size:.82rem;line-height:2;color:rgba(237,224,200,.7);margin-bottom:2.5rem;}
+.cm-list{list-style:none;display:flex;flex-direction:column;gap:.85rem;margin-bottom:2.8rem;}
+.cm-list li{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--sage);display:flex;align-items:center;gap:.9rem;}
+.cm-list li::before{content:'';display:block;width:4px;height:4px;border-radius:50%;background:var(--sand);opacity:.5;}
+.cm-art{display:flex;align-items:center;justify-content:center;}
+
+/* MANIFESTO */
+.manifesto{padding:7rem 6vw;background:var(--cream);display:flex;flex-direction:column;align-items:center;text-align:center;}
+.mline{font-family:'Cormorant',serif;font-size:clamp(1.6rem,3.2vw,3rem);font-weight:300;font-style:italic;color:var(--soil);padding:2rem 0;border-bottom:1px solid var(--mist);width:100%;max-width:820px;}
+.mline:last-child{border-bottom:none;}
+
+/* ORIGIN */
+.origin{padding:7rem 6vw;background:var(--parch);display:grid;grid-template-columns:1.3fr 1fr;gap:6rem;align-items:start;}
+.origin-text{font-family:'Cormorant',serif;font-size:clamp(1.15rem,1.6vw,1.5rem);font-weight:300;line-height:1.85;color:var(--soil);}
+.origin-text strong{font-style:italic;color:var(--moss);font-weight:300;}
+.origin-text p+p{margin-top:1.4rem;}
+.origin-aside{border-left:1px solid var(--mist);padding-left:2rem;font-size:.8rem;line-height:2.05;color:var(--stone);}
+
+/* EMAIL */
+.email-sec{padding:6rem 6vw;background:var(--soil);text-align:center;}
+.email-title{font-family:'Cormorant',serif;font-size:clamp(1.8rem,3.2vw,3.2rem);font-weight:300;font-style:italic;color:var(--linen);margin-bottom:.9rem;}
+.email-sub-txt{font-size:.73rem;color:var(--sand);opacity:.6;margin-bottom:2.8rem;letter-spacing:.06em;}
+.email-form{display:flex;max-width:460px;margin:0 auto;}
+.email-in{flex:1;padding:.95rem 1.4rem;background:transparent;border:1px solid rgba(200,168,122,.28);border-right:none;font-family:'DM Sans',sans-serif;font-size:.8rem;color:var(--linen);outline:none;}
+.email-in::placeholder{color:rgba(200,168,122,.3);}
+.email-in:focus{border-color:rgba(200,168,122,.55);}
+.email-sub-btn{padding:.95rem 1.8rem;background:var(--clay);color:var(--linen);font-family:'DM Sans',sans-serif;font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;border:none;cursor:pointer;transition:background .3s;white-space:nowrap;}
+.email-sub-btn:hover{background:var(--umber);}
+
+/* FOOTER */
+footer{background:var(--soil);padding:4.5rem 6vw 3rem;display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:3.5rem;align-items:start;}
+.ft-brand{font-family:'Cormorant',serif;font-size:1.1rem;font-weight:500;letter-spacing:.28em;color:var(--linen);margin-bottom:.6rem;}
+.ft-tag{font-size:.66rem;font-style:italic;color:var(--sand);opacity:.45;}
+.ft-h{font-size:.48rem;letter-spacing:.35em;text-transform:uppercase;color:var(--sand);opacity:.35;margin-bottom:1.2rem;}
+.ft-nav{list-style:none;display:flex;flex-direction:column;gap:.7rem;}
+.ft-nav a{font-size:.7rem;color:rgba(200,168,122,.42);cursor:pointer;text-decoration:none;transition:color .3s;}
+.ft-nav a:hover{color:var(--sand);}
+.nav-cart-btn{background:none;border:1px solid var(--mist);border-radius:0;cursor:pointer;color:var(--stone);display:flex;align-items:center;gap:.5rem;padding:.45rem .9rem;position:relative;transition:all .3s;font-family:'DM Sans',sans-serif;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;}
+.nav-cart-btn:hover{color:var(--soil);border-color:var(--clay);}
+#nav.scrolled .nav-cart-btn{border-color:var(--mist);}
+.snipcart-items-count{font-size:.58rem;background:var(--clay);color:var(--linen);border-radius:50%;min-width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif;padding:0 3px;}
+.snipcart-items-count:empty{display:none;}
+.ft-copy{font-size:.54rem;color:rgba(200,168,122,.22);margin-top:3.5rem;grid-column:1/-1;border-top:1px solid rgba(200,168,122,.08);padding-top:2rem;}
+.ft-mini{background:var(--soil);padding:2.2rem 6vw;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+
+/* ═══════════════════════════════
+   INNER PAGES
+═══════════════════════════════ */
+/* BOOK PAGE */
+.book-pg{padding-top:7rem;min-height:100vh;background:var(--parch);}
+.book-pg-inner{padding:4.5rem 6vw;display:grid;grid-template-columns:1fr 1.35fr;gap:7rem;align-items:start;}
+.bpg-jacket{position:sticky;top:8rem;background:var(--soil);aspect-ratio:2/3;display:flex;align-items:center;justify-content:center;padding:2.2rem;max-width:320px;}
+.bpg-title{font-family:'Cormorant',serif;font-size:clamp(2.2rem,3.5vw,3.6rem);font-weight:300;font-style:italic;color:var(--soil);margin-bottom:1rem;}
+.bpg-quote{font-family:'Cormorant',serif;font-size:clamp(1.05rem,1.5vw,1.45rem);font-weight:300;font-style:italic;color:var(--clay);border-left:2px solid var(--clay);padding-left:1.8rem;margin:1.8rem 0 2.2rem;line-height:1.65;}
+.bpg-text{font-size:.85rem;line-height:2.05;color:var(--stone);margin-bottom:1.2rem;}
+.excerpt-box{margin-top:2.5rem;padding:2rem 2.2rem;background:var(--linen);border-left:2px solid var(--clay);}
+.excerpt-text{font-family:'Cormorant',serif;font-style:italic;font-size:.93rem;line-height:2;color:var(--soil);}
+
+/* SHOP PAGE */
+.shop-pg{padding-top:7rem;min-height:100vh;}
+.shop-hdr{padding:3.5rem 6vw 2.5rem;background:var(--parch);border-bottom:1px solid var(--mist);}
+.shop-hdr-title{font-family:'Cormorant',serif;font-size:clamp(2.8rem,5.5vw,5rem);font-weight:300;color:var(--soil);line-height:.9;margin-bottom:.9rem;}
+.shop-hdr-sub{font-size:.73rem;color:var(--stone);letter-spacing:.1em;}
+.shop-tabs{display:flex;padding:0 6vw;border-bottom:1px solid var(--mist);background:var(--parch);}
+.stab{font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;padding:1.2rem 2rem;cursor:pointer;color:var(--stone);background:none;border:none;border-bottom:2px solid transparent;font-family:'DM Sans',sans-serif;margin-bottom:-1px;transition:all .3s;}
+.stab.on{color:var(--soil);border-bottom-color:var(--clay);}
+.stab:hover{color:var(--soil);}
+.sgrid{display:none;padding:4rem 6vw;grid-template-columns:repeat(3,1fr);gap:2rem;background:var(--cream);}
+.sgrid.on{display:grid;}
+.pcard{background:var(--parch);cursor:pointer;transition:transform .35s;border:1px solid transparent;}
+.pcard:hover{transform:translateY(-5px);border-color:var(--mist);}
+.pvisual{aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:var(--linen);}
+.pinfo{padding:1.5rem 1.2rem 1.8rem;}
+.pname{font-family:'Cormorant',serif;font-size:1.1rem;font-weight:400;color:var(--soil);margin-bottom:.4rem;}
+.ppoem{font-size:.68rem;line-height:1.95;color:var(--stone);font-style:italic;margin-bottom:1.2rem;}
+.pfoot{display:flex;justify-content:space-between;align-items:center;}
+.pprice{font-size:.76rem;color:var(--clay);}
+.abtn{font-size:.54rem;letter-spacing:.2em;text-transform:uppercase;padding:.55rem 1rem;background:var(--soil);color:var(--linen);border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .3s;}
+.abtn:hover,.abtn.added{background:var(--moss);}
+
+/* AUTHOR PAGE */
+.author-pg{padding-top:7rem;min-height:100vh;background:var(--fern);}
+.author-inner{padding:6rem 6vw;}
+.author-eyebrow{font-size:.5rem;letter-spacing:.42em;text-transform:uppercase;color:rgba(200,168,122,.45);margin-bottom:1.8rem;}
+.author-title{font-family:'Cormorant',serif;font-size:clamp(2.8rem,5.5vw,5.8rem);font-weight:300;font-style:italic;color:var(--linen);line-height:.9;margin-bottom:4rem;}
+.author-body{max-width:660px;font-size:1rem;line-height:2.1;color:rgba(237,224,200,.72);}
+.author-body p+p{margin-top:1.5rem;}
+.author-cta{margin-top:4rem;display:flex;gap:1rem;flex-wrap:wrap;}
+
+/* CONNECT PAGE */
+.connect-pg{padding-top:7rem;min-height:100vh;background:var(--parch);}
+.connect-inner{padding:6rem 6vw;display:grid;grid-template-columns:1fr 1.1fr;gap:7rem;align-items:start;}
+.connect-title{font-family:'Cormorant',serif;font-size:clamp(2.8rem,4.5vw,4.8rem);font-weight:300;color:var(--soil);line-height:1;margin-bottom:1.4rem;}
+.connect-desc{font-size:.82rem;line-height:1.95;color:var(--stone);margin-bottom:1.8rem;}
+.connect-note{font-size:.65rem;font-style:italic;color:var(--mist);margin-top:2.5rem;}
+.cform{display:flex;flex-direction:column;gap:1.2rem;}
+.flabel{font-size:.5rem;letter-spacing:.25em;text-transform:uppercase;color:var(--stone);display:block;margin-bottom:.35rem;}
+.finput,.fselect,.ftextarea{width:100%;padding:.9rem 1.1rem;background:transparent;border:1px solid var(--mist);font-family:'DM Sans',sans-serif;font-weight:300;font-size:.82rem;color:var(--soil);outline:none;transition:border-color .3s;appearance:none;}
+.finput:focus,.fselect:focus,.ftextarea:focus{border-color:var(--clay);}
+.finput::placeholder,.ftextarea::placeholder{color:var(--mist);}
+.ftextarea{min-height:125px;resize:none;}
+
+/* CART TOAST */
+.cart-toast{display:none;position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--soil);color:var(--linen);padding:.9rem 1.8rem;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;align-items:center;gap:1.8rem;z-index:300;border-top:2px solid var(--clay);white-space:nowrap;}
+.cart-toast.show{display:flex;}
+.cclose{background:none;border:none;color:var(--sand);cursor:pointer;font-size:1rem;}
+
+
+/* ─── SNIPCART CUSTOM THEME ─── */
+:root {
+  --color-default: #1A0F08;
+  --color-alt: #8C7D6A;
+  --color-input-default: #C2B49A;
+  --color-badge-foreground: #FAF7F2;
+  --color-badge: #6B3F22;
+  --color-button-default: #1A0F08;
+  --color-button-hover: #2E1A0D;
+  --color-link: #6B3F22;
+  --color-input-label: #8C7D6A;
+}
+#snipcart { font-family: 'DM Sans', sans-serif; }
+.snipcart-modal__container { background: #FAF7F2; }
+.snipcart__font--secondary, .snipcart__font--subtitle { font-family: 'Cormorant', serif; }
+.snipcart-cart-header { background: #1A0F08; color: #EDE0C8; }
+.snipcart-cart-header__title { font-family: 'Cormorant', serif; letter-spacing: .2em; }
+.snipcart-button-primary { background: #1A0F08 !important; font-family: 'DM Sans', sans-serif; letter-spacing: .15em; text-transform: uppercase; font-size: .65rem; }
+.snipcart-button-primary:hover { background: #2E1A0D !important; }
+.snipcart-checkout-button { background: #3D5229 !important; }
+.snipcart-checkout-button:hover { background: #2A3B1C !important; }
+
+
+/* ─── COMING SOON MODAL ─── */
+.cs-overlay{display:none;position:fixed;inset:0;background:rgba(26,15,8,.7);z-index:600;align-items:center;justify-content:center;padding:2rem;}
+.cs-overlay.show{display:flex;}
+.cs-box{background:var(--parch);max-width:480px;width:100%;padding:3.5rem;text-align:center;position:relative;animation:fU .5s ease both;}
+.cs-close{position:absolute;top:1.2rem;right:1.4rem;background:none;border:none;font-size:1.2rem;color:var(--mist);cursor:pointer;transition:color .3s;}
+.cs-close:hover{color:var(--soil);}
+.cs-leaf{margin-bottom:1.8rem;opacity:.35;}
+.cs-title{font-family:'Cormorant',serif;font-size:2.2rem;font-weight:300;font-style:italic;color:var(--soil);margin-bottom:1rem;line-height:1.15;}
+.cs-body{font-size:.82rem;line-height:1.95;color:var(--stone);margin-bottom:2rem;}
+.cs-tag{font-size:.52rem;letter-spacing:.35em;text-transform:uppercase;color:var(--sage);}
+/* email input inside modal */
+.cs-email-form{display:flex;margin-top:1.5rem;max-width:340px;margin-left:auto;margin-right:auto;}
+.cs-email-in{flex:1;padding:.85rem 1.1rem;background:transparent;border:1px solid var(--mist);border-right:none;font-family:'DM Sans',sans-serif;font-size:.78rem;color:var(--soil);outline:none;transition:border-color .3s;}
+.cs-email-in:focus{border-color:var(--clay);}
+.cs-email-in::placeholder{color:var(--mist);}
+.cs-email-btn{padding:.85rem 1.4rem;background:var(--soil);color:var(--linen);font-family:'DM Sans',sans-serif;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;border:none;cursor:pointer;transition:background .3s;white-space:nowrap;}
+.cs-email-btn:hover{background:var(--bark);}
+
+::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-track{background:var(--linen);}::-webkit-scrollbar-thumb{background:var(--mist);}
+
+/* ═══════════════════════════════
+   MOBILE — max 768px
+═══════════════════════════════ */
+@media(max-width:768px){
+  /* NAV */
+  .nav-links{display:none;}
+  .ham{display:flex;}
+  #nav{padding:1.2rem 5vw;}
+  #nav.scrolled{padding:1rem 5vw;}
+
+  /* HERO: stack vertically */
+  .hero{grid-template-columns:1fr;min-height:auto;}
+  .hero-l{padding:8rem 6vw 4rem;min-height:55vh;}
+  .hero-r{padding:3.5rem 6vw 4rem;}
+  .hero-brand{font-size:clamp(3.5rem,18vw,6rem);}
+  .hero-tagline{font-size:1rem;margin-top:1.5rem;}
+  .hero-r-sub{font-size:1.5rem;}
+  .hero-r-body{font-size:.82rem;}
+  .hero-btns{gap:.7rem;}
+  .btn{padding:.8rem 1.6rem;font-size:.58rem;}
+
+  /* INTRO: stack */
+  .intro{grid-template-columns:1fr;gap:2.5rem;padding:5rem 6vw;}
+  .intro-circle{text-align:center;}
+  .intro-text{font-size:1.4rem;}
+  .intro-sub{font-size:.8rem;}
+
+  /* BOOK: stack */
+  .book-sec{grid-template-columns:1fr;gap:3rem;padding:5rem 6vw;}
+  .book-jacket{max-width:100%;width:100%;}
+  .book-btns{flex-direction:column;align-items:flex-start;}
+
+  /* SHOP PREVIEW: stack cards */
+  .sp-grid{grid-template-columns:1fr;gap:3px;}
+  .sp-head{flex-direction:column;align-items:flex-start;gap:1.5rem;}
+  .shop-prev{padding:5rem 6vw;}
+  .sp-card{padding:2.5rem 2rem;}
+
+  /* COMMUNITY: stack */
+  .community{grid-template-columns:1fr;gap:3rem;padding:5rem 6vw;}
+  .cm-art{display:none;}
+  .cm-title{font-size:clamp(2.4rem,10vw,3.5rem);}
+
+  /* MANIFESTO */
+  .manifesto{padding:5rem 6vw;}
+  .mline{font-size:clamp(1.4rem,6vw,2rem);padding:1.5rem 0;}
+
+  /* ORIGIN: stack */
+  .origin{grid-template-columns:1fr;gap:2.5rem;padding:5rem 6vw;}
+  .origin-aside{border-left:none;border-top:1px solid var(--mist);padding-left:0;padding-top:2rem;}
+
+  /* EMAIL */
+  .email-sec{padding:5rem 6vw;}
+  .email-form{flex-direction:column;max-width:100%;}
+  .email-in{border-right:1px solid rgba(200,168,122,.28);border-bottom:none;}
+  .email-sub-btn{width:100%;padding:1rem;}
+
+  /* FOOTER */
+  footer{grid-template-columns:1fr;gap:2.5rem;padding:4rem 6vw 2.5rem;}
+  .ft-copy{margin-top:2rem;}
+
+  /* BOOK PAGE */
+  .book-pg-inner{grid-template-columns:1fr;gap:3rem;padding:3rem 6vw;}
+  .bpg-jacket{position:static;max-width:100%;width:100%;}
+
+  /* SHOP PAGE */
+  .sgrid{grid-template-columns:1fr 1fr;padding:3rem 6vw;gap:1.5rem;}
+
+  /* AUTHOR PAGE */
+  .author-inner{padding:4rem 6vw;}
+  .author-title{font-size:clamp(2.5rem,10vw,4rem);margin-bottom:2.5rem;}
+  .author-body{font-size:.92rem;}
+
+  /* CONNECT PAGE */
+  .connect-inner{grid-template-columns:1fr;gap:3rem;padding:4rem 6vw;}
+
+  /* FOOTER MINI */
+  .ft-mini{flex-direction:column;align-items:flex-start;gap:1rem;padding:2rem 6vw;}
+
+  /* CART */
+  .cart-toast{width:90%;justify-content:space-between;bottom:1rem;}
+}
+
+/* ═══════════════════════════════
+   SMALL MOBILE — max 480px
+═══════════════════════════════ */
+@media(max-width:480px){
+  .sgrid{grid-template-columns:1fr;padding:2.5rem 6vw;}
+  .pcard{max-width:100%;}
+  .sp-card{padding:2rem 1.5rem;}
+  .hero-l{min-height:60vh;padding:7rem 6vw 3.5rem;}
+  .book-sec,.intro,.community,.manifesto,.origin,.shop-prev,.email-sec{padding:4rem 6vw;}
+  .author-inner,.connect-inner,.book-pg-inner{padding:3rem 6vw;}
+  .hero-r{padding:3rem 6vw;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <span class="nav-wordmark" onclick="go('home')">GAIA ROOTS</span>
+  <ul class="nav-links">
+    <li><a onclick="go('home')">Home</a></li>
+    <li><a onclick="go('book')">The Book</a></li>
+    <li><a onclick="go('shop')">Shop</a></li>
+    <li><a onclick="go('author')">Gaia</a></li>
+    <li><a onclick="go('connect')">Connect</a></li>
+    <li><a onclick="go('shop')" class="nav-pill">Shop Now</a></li>
+    <li>
+      <button class="snipcart-checkout nav-cart-btn" aria-label="Open cart">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 01-8 0"/>
+        </svg>
+        Cart <span class="snipcart-items-count"></span>
+      </button>
+    </li>
+  </ul>
+  <button class="ham" id="ham" onclick="toggleDraw()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE NAV DRAWER -->
+<div class="nav-drawer" id="drawer">
+  <a onclick="go('home');closeDraw()">Home</a>
+  <a onclick="go('book');closeDraw()">The Book</a>
+  <a onclick="go('shop');closeDraw()">Shop</a>
+  <a onclick="go('author');closeDraw()">Gaia</a>
+  <a onclick="go('connect');closeDraw()">Connect</a>
+</div>
+
+<!-- ════════════ HOME ════════════ -->
+<div class="page active" id="pg-home">
+
+<section class="hero">
+  <div class="hero-l">
+    <svg class="root-art" viewBox="0 0 500 750" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g stroke="#C8A87A" fill="none" stroke-width=".9">
+        <path d="M250 750 Q238 610 215 520 Q188 418 148 355 Q112 298 62 258"/>
+        <path d="M250 750 Q262 608 288 515 Q318 410 358 346 Q398 280 448 238"/>
+        <path d="M215 520 Q172 492 132 502 M215 520 Q188 470 158 438 Q122 402 88 384"/>
+        <path d="M288 515 Q332 486 374 496 M288 515 Q318 464 350 430 Q382 396 414 376"/>
+        <path d="M148 355 Q116 328 82 336 M148 355 Q130 312 112 285"/>
+        <path d="M358 346 Q390 318 422 326 M358 346 Q376 302 395 274"/>
+        <path d="M88 384 Q62 368 38 382 M112 285 Q88 268 64 278"/>
+        <path d="M250 750 Q230 678 205 645 M250 750 Q270 676 295 642"/>
+        <path d="M205 645 Q182 630 164 642 M295 642 Q318 627 338 640"/>
+        <path d="M40 700 Q160 688 250 694 Q340 700 468 685" stroke-width=".45" opacity=".5"/>
+        <path d="M45 724 Q170 712 255 718 Q342 724 458 708" stroke-width=".35" opacity=".3"/>
+      </g>
+      <g fill="#C8A87A" opacity=".32">
+        <ellipse cx="128" cy="510" rx="4" ry="2" transform="rotate(-35 128 510)"/>
+        <ellipse cx="376" cy="498" rx="4" ry="2" transform="rotate(28 376 498)"/>
+        <ellipse cx="196" cy="428" rx="3" ry="1.5" transform="rotate(-50 196 428)"/>
+        <ellipse cx="316" cy="414" rx="3" ry="1.5" transform="rotate(40 316 414)"/>
+      </g>
+    </svg>
+    <div style="position:relative;z-index:1;">
+      <p style="font-size:.5rem;letter-spacing:.42em;text-transform:uppercase;color:var(--sand);margin-bottom:2rem;animation:fU 1.5s ease both .3s;">Gaia Roots</p>
+      <h1 class="hero-brand">GAIA<br>ROOTS</h1>
+      <p class="hero-tagline">We are what we return to.</p>
+    </div>
+  </div>
+  <div class="hero-r">
+    <div class="eyebrow" style="animation:fU 1.2s ease both .2s;">A Living Philosophy</div>
+    <p class="hero-r-sub">A living archive of identity, Earth, and memory. Built from story. Rooted in soil. Shared by all who understand.</p>
+    <p class="hero-r-body">This is not just clothing. This is not just a book.<br>This is a way of remembering.</p>
+    <div class="hero-btns">
+      <span class="btn b-dark" onclick="go('book')">Enter the Book &rarr;</span>
+      <span class="btn b-line" onclick="go('shop')">Shop the Collection</span>
+      <span class="btn b-moss" onclick="document.getElementById('cs-modal').classList.add('show')">Join the Circle</span>
+    </div>
+  </div>
+</section>
+
+<section class="intro">
+  <div class="intro-circle anim">
+    <svg viewBox="0 0 240 340" width="190" height="270" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+
+      <!-- outer sacred circle -->
+      <circle cx="120" cy="148" r="108" stroke="#3D5229" stroke-width=".8" fill="none" opacity=".5"/>
+      <circle cx="120" cy="148" r="95" stroke="#6B3F22" stroke-width=".5" fill="none" opacity=".3" stroke-dasharray="4 6"/>
+
+      <!-- inner rings -->
+      <circle cx="120" cy="148" r="70" stroke="#6B3F22" stroke-width=".7" fill="none" opacity=".4"/>
+      <circle cx="120" cy="148" r="46" stroke="#6E8850" stroke-width=".6" fill="none" opacity=".45"/>
+      <circle cx="120" cy="148" r="22" stroke="#9AAF74" stroke-width=".5" fill="none" opacity=".5"/>
+
+      <!-- cross hairs subtle -->
+      <path d="M120 40 L120 256 M12 148 L228 148" stroke="#2E1A0D" stroke-width=".4" opacity=".18"/>
+
+      <!-- diagonal marks like compass -->
+      <path d="M42 70 L198 226 M198 70 L42 226" stroke="#3D5229" stroke-width=".35" opacity=".15"/>
+
+      <!-- 8 dot markers on outer ring -->
+      <g fill="#6B3F22" opacity=".5">
+        <circle cx="120" cy="40" r="2.2"/>
+        <circle cx="196" cy="72" r="2.2"/>
+        <circle cx="228" cy="148" r="2.2"/>
+        <circle cx="196" cy="224" r="2.2"/>
+        <circle cx="120" cy="256" r="2.2"/>
+        <circle cx="44" cy="224" r="2.2"/>
+        <circle cx="12" cy="148" r="2.2"/>
+        <circle cx="44" cy="72" r="2.2"/>
+      </g>
+
+      <!-- MAIN STEM up from center -->
+      <path d="M120 148 Q120 148 120 60" stroke="#3D5229" stroke-width="1" fill="none"/>
+
+      <!-- LEFT LARGE LEAF -->
+      <path d="M120 110 Q88 88 72 72 Q90 90 120 110Z" stroke="#3D5229" stroke-width=".9" fill="rgba(61,82,41,.12)"/>
+      <path d="M120 110 Q96 91 72 72" stroke="#3D5229" stroke-width=".6" opacity=".5"/>
+      <!-- leaf vein -->
+      <path d="M96 91 Q92 96 88 100" stroke="#4A6030" stroke-width=".4" opacity=".4"/>
+
+      <!-- RIGHT LARGE LEAF -->
+      <path d="M120 110 Q152 88 168 72 Q150 90 120 110Z" stroke="#3D5229" stroke-width=".9" fill="rgba(61,82,41,.12)"/>
+      <path d="M120 110 Q144 91 168 72" stroke="#3D5229" stroke-width=".6" opacity=".5"/>
+      <!-- leaf vein -->
+      <path d="M144 91 Q148 96 152 100" stroke="#4A6030" stroke-width=".4" opacity=".4"/>
+
+      <!-- LEFT SMALL UPPER LEAF -->
+      <path d="M120 82 Q103 72 92 62 Q106 74 120 82Z" stroke="#6E8850" stroke-width=".8" fill="rgba(110,136,80,.1)"/>
+
+      <!-- RIGHT SMALL UPPER LEAF -->
+      <path d="M120 82 Q137 72 148 62 Q134 74 120 82Z" stroke="#6E8850" stroke-width=".8" fill="rgba(110,136,80,.1)"/>
+
+      <!-- TIP LEAVES at top of stem -->
+      <path d="M120 64 Q113 55 108 46 Q115 57 120 64Z" stroke="#9AAF74" stroke-width=".7" fill="rgba(154,175,116,.12)"/>
+      <path d="M120 64 Q127 55 132 46 Q125 57 120 64Z" stroke="#9AAF74" stroke-width=".7" fill="rgba(154,175,116,.12)"/>
+
+      <!-- CENTER DOT / seed -->
+      <circle cx="120" cy="148" r="5.5" fill="#6E8850" opacity=".55"/>
+      <circle cx="120" cy="148" r="2.5" fill="#3D5229" opacity=".7"/>
+
+      <!-- ROOT SYSTEM below center -->
+      <g stroke="#6B3F22" fill="none" stroke-width=".85" opacity=".55">
+        <!-- main tap root -->
+        <path d="M120 148 Q120 200 120 248"/>
+        <!-- left roots -->
+        <path d="M120 180 Q104 192 88 198"/>
+        <path d="M120 200 Q100 214 82 218"/>
+        <path d="M120 220 Q106 228 94 232"/>
+        <path d="M88 198 Q78 206 66 208"/>
+        <path d="M82 218 Q70 224 58 224"/>
+        <!-- right roots -->
+        <path d="M120 180 Q136 192 152 198"/>
+        <path d="M120 200 Q140 214 158 218"/>
+        <path d="M120 220 Q134 228 146 232"/>
+        <path d="M152 198 Q162 206 174 208"/>
+        <path d="M158 218 Q170 224 182 224"/>
+        <!-- root hair details -->
+        <path d="M66 208 Q60 212 56 216" stroke-width=".4" opacity=".4"/>
+        <path d="M58 224 Q52 228 48 234" stroke-width=".4" opacity=".4"/>
+        <path d="M174 208 Q180 212 184 216" stroke-width=".4" opacity=".4"/>
+        <path d="M182 224 Q188 228 192 234" stroke-width=".4" opacity=".4"/>
+        <path d="M94 232 Q90 238 88 244" stroke-width=".4" opacity=".4"/>
+        <path d="M146 232 Q150 238 152 244" stroke-width=".4" opacity=".4"/>
+      </g>
+
+      <!-- small soil texture dots -->
+      <g fill="#6B3F22" opacity=".22">
+        <circle cx="78" cy="264" r="1.5"/>
+        <circle cx="96" cy="272" r="1.2"/>
+        <circle cx="120" cy="268" r="1.5"/>
+        <circle cx="144" cy="272" r="1.2"/>
+        <circle cx="162" cy="264" r="1.5"/>
+        <circle cx="62" cy="276" r="1"/>
+        <circle cx="178" cy="276" r="1"/>
+        <circle cx="112" cy="280" r="1"/>
+        <circle cx="128" cy="280" r="1"/>
+      </g>
+
+      <!-- soil line -->
+      <path d="M55 258 Q88 252 120 254 Q152 252 185 258" stroke="#6B3F22" stroke-width=".6" fill="none" opacity=".3"/>
+
+      <!-- tiny seed / spore marks -->
+      <g fill="#9AAF74" opacity=".35">
+        <ellipse cx="68" cy="118" rx="3" ry="1.5" transform="rotate(-30 68 118)"/>
+        <ellipse cx="172" cy="118" rx="3" ry="1.5" transform="rotate(30 172 118)"/>
+        <ellipse cx="58" cy="158" rx="2.5" ry="1.2" transform="rotate(-20 58 158)"/>
+        <ellipse cx="182" cy="158" rx="2.5" ry="1.2" transform="rotate(20 182 158)"/>
+      </g>
+
+    </svg>
+  </div>
+  <div class="anim" style="transition-delay:.15s;">
+    <div class="eyebrow">What This Is</div>
+    <div class="intro-text">Gaia Roots is a living brand built around <em>memory, identity, and return.</em>
+      <span class="intro-sub">A reminder that we are not separate from the Earth — we are shaped by it, carried by it, and made from it.<br><br>This is not just clothing. This is not just a book. This is a way of remembering.</span>
+    </div>
+  </div>
+</section>
+
+<section class="book-sec">
+  <div class="book-jacket anim">
+    <div class="book-jacket-inner">
+      <svg viewBox="0 0 110 82" width="72" height="54" style="margin-bottom:1.6rem;opacity:.36;" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M55 77 Q27 53 30 26 Q34 5 55 5 Q76 5 80 26 Q83 53 55 77Z" stroke="#C8A87A" stroke-width=".8" fill="rgba(200,168,122,.07)"/>
+        <path d="M55 77 L55 5" stroke="#956040" stroke-width=".55"/>
+        <path d="M55 42 Q43 33 38 29 M55 42 Q67 33 72 29 M55 58 Q45 50 40 46 M55 58 Q65 50 70 46" stroke="#9AAF74" stroke-width=".55" fill="none" opacity=".52"/>
+      </svg>
+      <div class="jacket-title">Soil in<br>My Veins</div>
+      <div class="jacket-author">G . A . I . A</div>
+    </div>
+  </div>
+  <div class="anim" style="transition-delay:.18s;">
+    <div class="eyebrow">The Book</div>
+    <div class="book-quote">&ldquo;I stopped searching for myself when I realized I had never left where I came from.&rdquo;</div>
+    <div class="book-body">
+      <p>Soil in My Veins is a reflection on identity, belonging, and return. It explores memory, Earth connection, and the realization that we are not separate from the world that shaped us.</p>
+      <p>This is not a guide to becoming someone new. It is a remembrance of what has always been present beneath everything.</p>
+    </div>
+    <div class="book-btns">
+      <span class="btn b-line" onclick="go('book')">Read Excerpt</span>
+      <span class="btn b-dark" onclick="go('book')">Buy the Book</span>
+    </div>
+  </div>
+</section>
+
+<section class="shop-prev">
+  <div class="sp-head anim">
+    <h2 class="sp-title">Wear what<br>you remember.</h2>
+    <span class="btn b-dark" onclick="go('shop')">Enter the Shop &rarr;</span>
+  </div>
+  <p class="sp-sub anim" style="transition-delay:.12s;">Clothing and objects rooted in Earth, identity, and quiet expression.</p>
+  <div class="sp-grid">
+    <div class="sp-card anim" onclick="go('shop')">
+      <div class="sp-icon">
+        <svg viewBox="0 0 90 68" width="80" height="60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M22 17 L5 32 L20 38 L20 60 L70 60 L70 38 L85 32 L68 17 Q54 26 45 26 Q36 26 22 17Z" fill="#EDE0C8" stroke="#C2B49A" stroke-width="1"/>
+          <text x="45" y="46" text-anchor="middle" font-family="Cormorant,serif" font-size="8" fill="#3D5229" font-style="italic">Soil in My Veins</text>
+        </svg>
+      </div>
+      <div class="sp-name">Soil in My Veins Collection</div>
+      <div class="sp-desc">Earth-born identity wear for those who feel deeply connected to where they come from. Minimal. Meaningful. Story-driven.</div>
+      <span class="sp-arr">&rarr;</span>
+    </div>
+    <div class="sp-card anim" style="transition-delay:.12s;" onclick="go('shop')">
+      <div class="sp-icon">
+        <svg viewBox="0 0 90 68" width="80" height="60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="18" y="8" width="54" height="52" fill="#EDE0C8" stroke="#C2B49A" stroke-width="1"/>
+          <rect x="18" y="8" width="54" height="15" fill="#2A3B1C" opacity=".8"/>
+          <text x="45" y="22" text-anchor="middle" font-family="Cormorant,serif" font-size="6.5" fill="#EDE0C8">Gaia Notes</text>
+          <line x1="26" y1="34" x2="64" y2="34" stroke="#C2B49A" stroke-width=".7"/>
+          <line x1="26" y1="44" x2="64" y2="44" stroke="#C2B49A" stroke-width=".7"/>
+          <line x1="26" y1="54" x2="46" y2="54" stroke="#C2B49A" stroke-width=".7"/>
+        </svg>
+      </div>
+      <div class="sp-name">Gaia Notes</div>
+      <div class="sp-desc">Journals and writing tools for reflection, grounding, and memory. Objects that hold your becoming.</div>
+      <span class="sp-arr">&rarr;</span>
+    </div>
+  </div>
+</section>
+
+<section class="community">
+  <div class="anim">
+    <div class="eyebrow" style="color:rgba(110,136,80,.65);">Collective</div>
+    <h2 class="cm-title">Gaia<br>Circle</h2>
+    <p class="cm-body">A quiet place for reflection, story, and connection. A growing community of people exploring identity, Earth connection, and personal truth.</p>
+    <ul class="cm-list">
+      <li>Reflections &amp; writing</li>
+      <li>Early access drops</li>
+      <li>Community stories</li>
+      <li>Journal entries</li>
+    </ul>
+    <span class="btn b-linen" onclick="document.getElementById('cs-modal').classList.add('show')">Join the Circle &rarr;</span>
+  </div>
+  <div class="cm-art anim" style="transition-delay:.2s;">
+    <svg viewBox="0 0 260 260" width="260" height="260" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="130" cy="130" r="118" stroke="rgba(200,168,122,.07)" stroke-width="1" fill="none"/>
+      <circle cx="130" cy="130" r="90" stroke="rgba(200,168,122,.12)" stroke-width="1" fill="none"/>
+      <circle cx="130" cy="130" r="62" stroke="rgba(200,168,122,.18)" stroke-width="1" fill="none"/>
+      <circle cx="130" cy="130" r="34" stroke="rgba(200,168,122,.26)" stroke-width="1" fill="none"/>
+      <g fill="rgba(200,168,122,.4)">
+        <circle cx="130" cy="12" r="3.2"/><circle cx="212" cy="48" r="3.2"/>
+        <circle cx="248" cy="130" r="3.2"/><circle cx="212" cy="212" r="3.2"/>
+        <circle cx="130" cy="248" r="3.2"/><circle cx="48" cy="212" r="3.2"/>
+        <circle cx="12" cy="130" r="3.2"/><circle cx="48" cy="48" r="3.2"/>
+      </g>
+      <g stroke="rgba(200,168,122,.09)" stroke-width=".8">
+        <line x1="130" y1="12" x2="130" y2="248"/><line x1="12" y1="130" x2="248" y2="130"/>
+        <line x1="48" y1="48" x2="212" y2="212"/><line x1="212" y1="48" x2="48" y2="212"/>
+      </g>
+      <circle cx="130" cy="130" r="7" fill="rgba(200,168,122,.33)"/>
+    </svg>
+  </div>
+</section>
+
+<section class="manifesto">
+  <div class="eyebrow" style="align-self:flex-start;">Manifesto</div>
+  <div class="mline">&ldquo;The Earth does not forget you.&rdquo;</div>
+  <div class="mline">&ldquo;You are not separate from what made you.&rdquo;</div>
+  <div class="mline">&ldquo;Everything begins in soil.&rdquo;</div>
+</section>
+
+<section class="origin">
+  <div class="anim">
+    <div class="eyebrow">Origin</div>
+    <div class="origin-text">
+      <p>Gaia Roots began as a question:</p>
+      <p><strong>What happens when we stop trying to separate ourselves from where we come from?</strong></p>
+      <p>Soil in My Veins became the first answer. A personal reflection on identity, grounding, and return.</p>
+      <p>From there, Gaia Roots became the world built around that question.</p>
+    </div>
+  </div>
+  <div class="anim" style="transition-delay:.18s;">
+    <p class="origin-aside">Not a brand. Not a movement. Not a trend.<br><br>A remembering.<br><br>For those who already know it &mdash; and for those who are only now beginning to feel it.</p>
+  </div>
+</section>
+
+<section class="email-sec">
+  <div class="anim">
+    <h2 class="email-title">Stay rooted with us.</h2>
+    <p class="email-sub-txt">Weekly reflections, new releases, and stories from the Gaia Circle.</p>
+    <!-- Subscription form → hello@gaiaroots.com
+         To activate: sign up at formspree.io, create a form, replace YOUR_FORMSPREE_ID below -->
+    <form class="email-form" action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST">
+      <input type="hidden" name="_replyto" value="hello@gaiaroots.com">
+      <input type="hidden" name="_subject" value="New Gaia Roots Subscriber">
+      <input type="email" name="email" class="email-in" placeholder="your@email.com" required>
+      <button type="submit" class="email-sub-btn">Subscribe</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <div class="ft-brand">GAIA ROOTS</div>
+    <div class="ft-tag">We are what we return to.</div>
+  </div>
+  <div>
+    <div class="ft-h">Navigate</div>
+    <ul class="ft-nav">
+      <li><a onclick="go('home')">Home</a></li>
+      <li><a onclick="go('book')">The Book</a></li>
+      <li><a onclick="go('shop')">Shop</a></li>
+      <li><a onclick="go('author')">About Gaia</a></li>
+      <li><a onclick="go('connect')">Connect</a></li>
+    </ul>
+  </div>
+  <div>
+    <div class="ft-h">Collections</div>
+    <ul class="ft-nav">
+      <li><a onclick="go('shop')">Soil in My Veins Tees</a></li>
+      <li><a onclick="go('shop')">Gaia Notes</a></li>
+      <li><a onclick="document.getElementById('cs-modal').classList.add('show')" style="opacity:.45;font-style:italic;">Gaia Circle — Coming Soon</a></li>
+    </ul>
+  </div>
+  <div class="ft-copy">&copy; 2026 Gaia Roots &middot; Grounded Awareness In All &middot; All rights reserved.</div>
+</footer>
+</div>
+
+<!-- ════════════ BOOK PAGE ════════════ -->
+<div class="page" id="pg-book">
+<div class="book-pg">
+  <div class="book-pg-inner">
+    <div class="bpg-jacket">
+      <div class="book-jacket-inner">
+        <svg viewBox="0 0 110 82" width="65" height="48" style="margin-bottom:1.4rem;opacity:.33;" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M55 77 Q27 53 30 26 Q34 5 55 5 Q76 5 80 26 Q83 53 55 77Z" stroke="#C8A87A" stroke-width=".8" fill="rgba(200,168,122,.07)"/>
+          <path d="M55 77 L55 5" stroke="#956040" stroke-width=".5"/>
+          <path d="M55 42 Q43 33 38 29 M55 42 Q67 33 72 29 M55 58 Q45 50 40 46 M55 58 Q65 50 70 46" stroke="#9AAF74" stroke-width=".5" fill="none" opacity=".48"/>
+        </svg>
+        <div class="jacket-title" style="font-size:1.5rem;">Soil in<br>My Veins</div>
+        <div class="jacket-author" style="margin-top:.9rem;">G . A . I . A</div>
+      </div>
+    </div>
+    <div>
+      <div class="eyebrow">The Book</div>
+      <h1 class="bpg-title">Soil in My Veins</h1>
+      <div class="bpg-quote">&ldquo;I stopped searching for myself when I realized I had never left where I came from.&rdquo;</div>
+      <p class="bpg-text">Soil in My Veins is a reflective book about identity, belonging, and return. It moves through personal story and philosophical reflection, exploring what it means to be grounded in something larger than yourself.</p>
+      <p class="bpg-text">Not a self-help guide. Not a wellness manual. A remembrance. A meditation on what was always already here &mdash; beneath all the noise of becoming.</p>
+      <p class="bpg-text">Each chapter is a season. Each page, a seed pressed into earth, waiting for the right moment to break open.</p>
+      <div class="excerpt-box">
+        <div class="eyebrow" style="margin-bottom:.9rem;">Excerpt</div>
+        <p class="excerpt-text">&ldquo;There is a moment &mdash; brief, quiet &mdash; when you realize the ground beneath you has always known your name. Not the name your parents gave you. Not the one built from achievements and losses. Your oldest name. The one the soil has been calling since before you had words for anything...&rdquo;</p>
+      </div>
+      <div class="book-btns" style="margin-top:2.5rem;">
+        <button
+  class="btn b-dark snipcart-add-item"
+  data-item-id="soil-in-my-veins-book"
+  data-item-name="Soil in My Veins — Book"
+  data-item-price="24.00"
+  data-item-url="/gaia-roots.html"
+  data-item-description="A reflection on identity, belonging, and return by G.A.I.A"
+  data-item-image="">Buy the Book</button>
+        <span class="btn b-line" onclick="go('connect')">Inquire</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="ft-mini">
+  <div class="ft-brand">GAIA ROOTS</div>
+  <span class="btn b-sand" onclick="go('home')">&larr; Home</span>
+</div>
+</div>
+
+<!-- ════════════ SHOP PAGE ════════════ -->
+<div class="page" id="pg-shop">
+<div class="shop-pg">
+  <div class="shop-hdr">
+    <div class="eyebrow">The Collection</div>
+    <h1 class="shop-hdr-title">Shop<br>Gaia Roots</h1>
+    <p class="shop-hdr-sub">Wearable identity, grounded in Earth and story.</p>
+  </div>
+  <div class="shop-tabs">
+    <button class="stab on" onclick="stab('tees',this)">T-Shirts</button>
+    <button class="stab" onclick="stab('stat',this)">Gaia Notes</button>
+  </div>
+  <!-- TEES -->
+  <div class="sgrid on" id="sg-tees">
+    <div class="pcard">
+      <div class="pvisual">
+        <svg viewBox="0 0 200 200" width="120" height="120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M62 52 L32 82 L58 92 L58 162 L142 162 L142 92 L168 82 L138 52 Q118 63 100 63 Q82 63 62 52Z" fill="#EDE0C8" stroke="#C2B49A" stroke-width="1.4"/>
+          <text x="100" y="118" text-anchor="middle" font-family="Cormorant,serif" font-size="10.5" fill="#3D5229" font-style="italic">Soil in My Veins</text>
+          <path d="M80 131 Q100 127 120 131" stroke="#6B3F22" stroke-width=".8" fill="none" opacity=".38"/>
+        </svg>
+      </div>
+      <div class="pinfo">
+        <div class="pname">The Root Tee</div>
+        <div class="ppoem">For those who carry the earth without trying. Stone-washed organic cotton &mdash; the color of morning soil.</div>
+        <div class="pfoot"><span class="pprice">$38</span><button
+  class="abtn snipcart-add-item"
+  data-item-id="root-tee"
+  data-item-name="The Root Tee"
+  data-item-price="38.00"
+  data-item-url="/gaia-roots.html"
+  data-item-description="Stone-washed organic cotton. The color of morning soil."
+  data-item-image=""
+  data-item-custom1-name="Size"
+  data-item-custom1-options="XS|S|M|L|XL|XXL">Add to Cart</button></div>
+      </div>
+    </div>
+    <div class="pcard">
+      <div class="pvisual">
+        <svg viewBox="0 0 200 200" width="120" height="120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M62 52 L32 82 L58 92 L58 162 L142 162 L142 92 L168 82 L138 52 Q118 63 100 63 Q82 63 62 52Z" fill="#2A3B1C" stroke="#222f16" stroke-width="1.4"/>
+          <text x="100" y="108" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6.5" fill="#C8A87A" letter-spacing="4">G.A.I.A</text>
+          <text x="100" y="124" text-anchor="middle" font-family="Cormorant,serif" font-size="7.5" fill="#6E8850" font-style="italic">Grounded Awareness In All</text>
+        </svg>
+      </div>
+      <div class="pinfo">
+        <div class="pname">The Gaia Tee</div>
+        <div class="ppoem">Not a logo. A declaration. Forest green because that is where you come from, and where you will return.</div>
+        <div class="pfoot"><span class="pprice">$38</span><button
+  class="abtn snipcart-add-item"
+  data-item-id="gaia-tee"
+  data-item-name="The Gaia Tee"
+  data-item-price="38.00"
+  data-item-url="/gaia-roots.html"
+  data-item-description="Forest green organic cotton. Grounded Awareness In All."
+  data-item-image=""
+  data-item-custom1-name="Size"
+  data-item-custom1-options="XS|S|M|L|XL|XXL">Add to Cart</button></div>
+      </div>
+    </div>
+    <div class="pcard">
+      <div class="pvisual">
+        <svg viewBox="0 0 200 200" width="120" height="120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M62 52 L32 82 L58 92 L58 162 L142 162 L142 92 L168 82 L138 52 Q118 63 100 63 Q82 63 62 52Z" fill="#C8A87A" stroke="#B8987A" stroke-width="1.4"/>
+          <path d="M100 85 L100 148" stroke="#1A0F08" stroke-width=".85"/>
+          <path d="M100 100 Q88 92 80 96 M100 113 Q86 104 78 108 M100 127 Q88 118 80 122 M100 100 Q112 92 120 96 M100 113 Q114 104 122 108 M100 127 Q112 118 120 122" stroke="#1A0F08" stroke-width=".85" fill="none" opacity=".48"/>
+        </svg>
+      </div>
+      <div class="pinfo">
+        <div class="pname">The Mycelium Tee</div>
+        <div class="ppoem">Everything connected beneath the surface. Sand cotton &mdash; the color of memory.</div>
+        <div class="pfoot"><span class="pprice">$38</span><button
+  class="abtn snipcart-add-item"
+  data-item-id="mycelium-tee"
+  data-item-name="The Mycelium Tee"
+  data-item-price="38.00"
+  data-item-url="/gaia-roots.html"
+  data-item-description="Sand-tone organic cotton. The color of memory."
+  data-item-image=""
+  data-item-custom1-name="Size"
+  data-item-custom1-options="XS|S|M|L|XL|XXL">Add to Cart</button></div>
+      </div>
+    </div>
+  </div>
+  <!-- STATIONERY -->
+  <div class="sgrid" id="sg-stat">
+    <div class="pcard">
+      <div class="pvisual">
+        <svg viewBox="0 0 200 200" width="120" height="120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="55" y="38" width="90" height="124" rx="2" fill="#F6F0E6" stroke="#C2B49A" stroke-width="1"/>
+          <rect x="55" y="38" width="90" height="32" fill="#2A3B1C" opacity=".88"/>
+          <text x="100" y="59" text-anchor="middle" font-family="Cormorant,serif" font-size="9" fill="#EDE0C8" font-style="italic">Gaia Notes</text>
+          <line x1="68" y1="90" x2="132" y2="90" stroke="#C2B49A" stroke-width=".6"/>
+          <line x1="68" y1="104" x2="132" y2="104" stroke="#C2B49A" stroke-width=".6"/>
+          <line x1="68" y1="118" x2="132" y2="118" stroke="#C2B49A" stroke-width=".6"/>
+          <line x1="68" y1="132" x2="108" y2="132" stroke="#C2B49A" stroke-width=".6"/>
+          <path d="M88 150 Q100 142 112 150 Q100 160 88 150Z" fill="#6B3F22" opacity=".4"/>
+        </svg>
+      </div>
+      <div class="pinfo">
+        <div class="pname">Grounded Journal</div>
+        <div class="ppoem">For what cannot be said aloud. Recycled paper, sewn binding, forest cover. For the thoughts that need earth beneath them.</div>
+        <div class="pfoot"><span class="pprice">$24</span><button
+  class="abtn snipcart-add-item"
+  data-item-id="grounded-journal"
+  data-item-name="Grounded Journal"
+  data-item-price="24.00"
+  data-item-url="/gaia-roots.html"
+  data-item-description="Recycled paper, sewn binding, forest-green cover."
+  data-item-image="">Add to Cart</button></div>
+      </div>
+    </div>
+    <div class="pcard">
+      <div class="pvisual">
+        <svg viewBox="0 0 200 200" width="120" height="120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="48" y="58" width="104" height="70" rx="2" fill="#FAF7F2" stroke="#C2B49A" stroke-width="1"/>
+          <rect x="48" y="58" width="104" height="5" fill="#6B3F22" opacity=".62"/>
+          <text x="100" y="96" text-anchor="middle" font-family="Cormorant,serif" font-size="9.5" fill="#1A0F08" font-style="italic">Soil in My Veins</text>
+          <text x="100" y="110" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6" fill="#8C7D6A" letter-spacing="2.5">G.A.I.A</text>
+          <line x1="65" y1="150" x2="135" y2="150" stroke="#C2B49A" stroke-width=".8"/>
+          <line x1="80" y1="158" x2="120" y2="158" stroke="#C2B49A" stroke-width=".5"/>
+        </svg>
+      </div>
+      <div class="pinfo">
+        <div class="pname">Memory Notecards</div>
+        <div class="ppoem">Eight cards for what matters. Write what you mean. Recycled cream stock &mdash; for words that arrive slowly.</div>
+        <div class="pfoot"><span class="pprice">$18</span><button
+  class="abtn snipcart-add-item"
+  data-item-id="memory-notecards"
+  data-item-name="Memory Notecards"
+  data-item-price="18.00"
+  data-item-url="/gaia-roots.html"
+  data-item-description="Set of 8 recycled cream-toned notecards with envelopes."
+  data-item-image="">Add to Cart</button></div>
+      </div>
+    </div>
+    <div class="pcard">
+      <div class="pvisual">
+        <svg viewBox="0 0 200 200" width="120" height="120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="85" y="38" width="12" height="100" rx="6" fill="#2E1A0D"/>
+          <ellipse cx="91" cy="38" rx="6" ry="4" fill="#1A0F08"/>
+          <rect x="88" y="40" width="7" height="6" fill="#C8A87A"/>
+          <rect x="68" y="100" width="13" height="62" rx="2" fill="#3D5229"/>
+          <ellipse cx="75" cy="100" rx="7" ry="3.5" fill="#2A3B1C"/>
+          <rect x="71" y="100" width="9" height="5" fill="#6E8850"/>
+          <rect x="109" y="110" width="12" height="52" rx="2" fill="#6B3F22"/>
+          <ellipse cx="115" cy="110" rx="6" ry="3" fill="#2E1A0D"/>
+          <rect x="111" y="110" width="9" height="5" fill="#956040"/>
+        </svg>
+      </div>
+      <div class="pinfo">
+        <div class="pname">Earth Pen Trio</div>
+        <div class="ppoem">Soil, fern, and clay. Write from the ground up. Plant-based ink that does not forget where it came from.</div>
+        <div class="pfoot"><span class="pprice">$22</span><button
+  class="abtn snipcart-add-item"
+  data-item-id="earth-pen-trio"
+  data-item-name="Earth Pen Trio"
+  data-item-price="22.00"
+  data-item-url="/gaia-roots.html"
+  data-item-description="Three plant-based ink pens in soil, fern, and clay."
+  data-item-image="">Add to Cart</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="ft-mini">
+  <div class="ft-brand">GAIA ROOTS</div>
+  <span class="btn b-sand" onclick="go('home')">&larr; Home</span>
+</div>
+</div>
+
+<!-- ════════════ AUTHOR PAGE ════════════ -->
+<div class="page" id="pg-author">
+<div class="author-pg">
+  <div class="author-inner">
+    <p class="author-eyebrow">About</p>
+    <h1 class="author-title">Gaia is not<br>one person.</h1>
+    <div class="author-body">
+      <p>Gaia Roots is not built around a single creator. It is built around recognition.</p>
+      <p>Gaia is the name given to everyone who feels the Earth in themselves &mdash; not as concept, but as truth.</p>
+      <p>It belongs to no single voice, because it is carried by many.</p>
+      <p>G.A.I.A: Grounded Awareness In All.</p>
+      <p>Not a person. A posture. A way of being present to what is already here, already known, already rooted in the soil of who you are.</p>
+      <p>If you feel it, you are already part of it.</p>
+    </div>
+    <div class="author-cta">
+      <span class="btn b-linen" onclick="document.getElementById('cs-modal').classList.add('show')">Join the Circle &rarr;</span>
+      <span class="btn b-sand" onclick="go('connect')">Connect</span>
+    </div>
+  </div>
+</div>
+<div class="ft-mini">
+  <div class="ft-brand">GAIA ROOTS</div>
+  <span class="btn b-sand" onclick="go('home')">&larr; Home</span>
+</div>
+</div>
+
+<!-- ════════════ CONNECT PAGE ════════════ -->
+<div class="page" id="pg-connect">
+<div class="connect-pg">
+  <div class="connect-inner">
+    <div>
+      <div class="eyebrow">Reach Out</div>
+      <h1 class="connect-title">Connect</h1>
+      <p class="connect-desc">For orders, questions, reflections, and correspondence. Every message is read with care.</p>
+      <svg viewBox="0 0 120 120" width="82" height="82" style="opacity:.14;margin-top:2.5rem;" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="60" cy="60" r="55" stroke="#3D5229" stroke-width=".8" fill="none"/>
+        <path d="M60 5 L60 115 M5 60 L115 60" stroke="#2E1A0D" stroke-width=".5" opacity=".4"/>
+        <path d="M60 5 Q90 32 60 60 Q30 88 60 115" stroke="#3D5229" stroke-width=".85" fill="none"/>
+        <circle cx="60" cy="60" r="8" fill="rgba(61,82,41,.38)"/>
+      </svg>
+      <p class="connect-note">Responses are sent from within the Gaia Circle.<br>Nothing here is automated in feeling.</p>
+    </div>
+    <!-- Contact form — routes to hello@gaiaroots.com (general) or orders@gaiaroots.com (order inquiries)
+         To activate: sign up at formspree.io, create a form, replace YOUR_FORMSPREE_ID below -->
+    <form class="cform" action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST" onsubmit="handleContactSubmit(event, this)">
+      <input type="hidden" name="_subject" value="New message via Gaia Roots website">
+      <div><label class="flabel">Name</label><input type="text" name="name" class="finput" placeholder="Your name" required></div>
+      <div><label class="flabel">Email</label><input type="email" name="email" class="finput" placeholder="your@email.com" required></div>
+      <div>
+        <label class="flabel">Subject</label>
+        <select name="subject" class="fselect" onchange="routeEmail(this)">
+          <option value="Order Inquiry">Order Inquiry</option>
+          <option value="Fan Mail">Fan Mail</option>
+          <option value="Collaboration">Collaboration</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div><label class="flabel">Message</label><textarea name="message" class="ftextarea" placeholder="Write from wherever you are..." required></textarea></div>
+      <input type="hidden" name="_replyto" id="form-reply-to" value="hello@gaiaroots.com">
+      <button type="submit" class="btn b-dark" style="align-self:flex-start;" id="contact-submit-btn">Send Message</button>
+      <p style="font-size:.6rem;color:var(--mist);font-style:italic;margin-top:.5rem;" id="form-route-note">General messages &rarr; hello@gaiaroots.com</p>
+    </form>
+  </div>
+</div>
+<div class="ft-mini">
+  <div class="ft-brand">GAIA ROOTS</div>
+  <span class="btn b-sand" onclick="go('home')">&larr; Home</span>
+</div>
+</div>
+
+<script>
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>55));
+
+function go(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('pg-'+id).classList.add('active');
+  scrollTo({top:0,behavior:'smooth'});
+  setTimeout(observe,100);
+}
+
+function observe(){
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});
+  },{threshold:.08});
+  document.querySelectorAll('.page.active .anim,.page.active .mline').forEach(el=>{
+    el.classList.remove('in');io.observe(el);
+  });
+}
+
+function stab(id,btn){
+  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.sgrid').forEach(g=>g.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('sg-'+id).classList.add('on');
+}
+
+/* Cart handled by Snipcart */
+
+function toggleDraw(){
+  document.getElementById('ham').classList.toggle('open');
+  document.getElementById('drawer').classList.toggle('open');
+}
+function closeDraw(){
+  document.getElementById('ham').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+}
+
+window.addEventListener('load',observe);
+
+function closeCSModal(e){
+  if(e.target===document.getElementById('cs-modal'))
+    document.getElementById('cs-modal').classList.remove('show');
+}
+
+function submitCSEmail(){
+  const inp=document.getElementById('cs-email-input');
+  if(inp.value&&inp.value.includes('@')){
+    inp.closest('.cs-email-form').innerHTML='<p style="font-size:.78rem;color:var(--moss);font-style:italic;padding:1rem 0;">You\u2019re on the list. We\u2019ll reach you when the circle opens. &#10003;</p>';
+    // In production this posts to circle@gaiaroots.com via Formspree
+  }else{
+    inp.style.borderColor='var(--clay)';
+  }
+}
+
+function routeEmail(sel){
+  const note=document.getElementById('form-route-note');
+  const replyTo=document.getElementById('form-reply-to');
+  if(sel.value==='Order Inquiry'){
+    replyTo.value='orders@gaiaroots.com';
+    note.innerHTML='Order inquiries &rarr; orders@gaiaroots.com';
+  } else {
+    replyTo.value='hello@gaiaroots.com';
+    note.innerHTML='General messages &rarr; hello@gaiaroots.com';
+  }
+}
+
+function handleContactSubmit(e,form){
+  const btn=document.getElementById('contact-submit-btn');
+  btn.textContent='Sent from the roots. \u2726';
+  btn.style.background='var(--moss)';
+  // form submits normally to Formspree
+}
+
+</script>
+
+
+<!-- COMING SOON MODAL — Gaia Circle -->
+<div class="cs-overlay" id="cs-modal" onclick="closeCSModal(event)">
+  <div class="cs-box">
+    <button class="cs-close" onclick="document.getElementById('cs-modal').classList.remove('show')" aria-label="Close">&times;</button>
+    <div class="cs-leaf">
+      <svg viewBox="0 0 60 80" width="38" height="50" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M30 75 Q8 52 10 28 Q13 5 30 5 Q47 5 50 28 Q52 52 30 75Z" stroke="#3D5229" stroke-width="1" fill="rgba(61,82,41,.08)"/>
+        <path d="M30 75 L30 5" stroke="#6B3F22" stroke-width=".7"/>
+        <path d="M30 40 Q20 32 15 28 M30 40 Q40 32 45 28 M30 55 Q22 48 17 44 M30 55 Q38 48 43 44" stroke="#6E8850" stroke-width=".7" fill="none" opacity=".6"/>
+      </svg>
+    </div>
+    <p class="cs-tag">Coming Soon</p>
+    <h2 class="cs-title">Gaia Circle is<br>taking root.</h2>
+    <p class="cs-body">A quiet space for reflection, story, and connection is being prepared. Leave your email below and you will be the first to know when the circle opens.</p>
+    <div class="cs-email-form">
+      <input type="email" class="cs-email-in" placeholder="your@email.com" id="cs-email-input">
+      <button class="cs-email-btn" onclick="submitCSEmail()">Notify Me</button>
+    </div>
+    <p style="font-size:.6rem;color:var(--mist);margin-top:1rem;font-style:italic;">Sent to circle@gaiaroots.com &middot; No spam. Ever.</p>
+  </div>
+</div>
+
+<!-- SNIPCART -->
+<!-- Replace ZjZiODFhMjItOGFiZi00ZTFiLWJmZjUtNmQwY2E4MzNiYTczNjM5MTYzMTE4MjQyNTY1NDUx below with your actual Public API Key from snipcart.com/dashboard -->
+<div hidden id="snipcart" data-api-key="ZjZiODFhMjItOGFiZi00ZTFiLWJmZjUtNmQwY2E4MzNiYTczNjM5MTYzMTE4MjQyNTY1NDUx" data-currency="usd"></div>
+<script async src="https://cdn.snipcart.com/themes/v3.3.3/default/snipcart.js"></script>
+
+<!-- HOW TO ACTIVATE:
+  1. Create a free account at snipcart.com
+  2. Go to Account > API Keys
+  3. Copy your PUBLIC API key
+  4. Replace ZjZiODFhMjItOGFiZi00ZTFiLWJmZjUtNmQwY2E4MzNiYTczNjM5MTYzMTE4MjQyNTY1NDUx above with it
+  5. In Snipcart dashboard, connect Stripe or PayPal for payments
+  6. Connect Printify webhook for t-shirts/journals fulfillment
+  7. Connect Lulu Direct webhook for book fulfillment
+  That's it — orders will flow automatically!
+-->
+
+</body>
+</html>
