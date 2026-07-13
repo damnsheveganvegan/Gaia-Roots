@@ -3,7 +3,51 @@
 // Listens for Snipcart's "order.completed" webhook, verifies it's really
 // from Snipcart, then creates a matching order in Printify for fulfillment.
 
-const productMap = require('./printify-product-map.json');
+const productMap = {
+  shop_id: 28189021,
+  products: {
+    'breathe-metamorphosis': {
+      printify_product_id: '6a5303141e7f67c4f10ba979',
+      colors: {
+        'Military Green': { S: 12192, M: 12191, L: 12190, XL: 12193, '2XL': 12194, '3XL': 12195, '4XL': 24060, '5XL': 24194 },
+        'Red':            { S: 12024, M: 12023, L: 12022, XL: 12025, '2XL': 12026, '3XL': 12027, '4XL': 24005, '5XL': 24138 },
+      },
+    },
+    'compost-nature': {
+      printify_product_id: '6a525464773bfedc8c0bcc88',
+      colors: {
+        'Forest Green': { S: 12144, M: 12143, L: 12142, XL: 12145, '2XL': 12146, '3XL': 12147, '4XL': 24045, '5XL': 24178 },
+      },
+    },
+    'soil-in-my-veins': {
+      printify_product_id: '6a522d54773bfedc8c0ba8b9',
+      colors: {
+        'White': { S: 12102, M: 12101, L: 12100, XL: 12103, '2XL': 12104, '3XL': 12105, '4XL': 24031, '5XL': 24164 },
+      },
+    },
+    'if-i-must-break': {
+      printify_product_id: '6a522c799e0882f544002d39',
+      colors: {
+        'Natural': { S: 11982, M: 11981, L: 11980, XL: 11983, '2XL': 11984, '3XL': 11985, '4XL': 23991, '5XL': 24124 },
+      },
+    },
+    'daughters-of-the-storm': {
+      printify_product_id: '6a52235c773bfedc8c0ba219',
+      colors: {
+        'Black': { S: 12126, M: 12125, L: 12124, XL: 12127, '2XL': 12128, '3XL': 12129, '4XL': 24039, '5XL': 24171 },
+        'Navy':  { S: 11988, M: 11987, L: 11986, XL: 11989, '2XL': 11990, '3XL': 11991, '4XL': 23993, '5XL': 24126 },
+        'Maroon':{ S: 11976, M: 11975, L: 11974, XL: 11977, '2XL': 11978, '3XL': 11979, '4XL': 23989, '5XL': 24122 },
+      },
+    },
+    'the-inheritance': {
+      printify_product_id: '6a521fb45a237ba6d60985f6',
+      colors: {
+        'Black': { S: 12126, M: 12125, L: 12124, XL: 12127, '2XL': 12128, '3XL': 12129, '4XL': 24039, '5XL': 24171 },
+        'White': { S: 12102, M: 12101, L: 12100, XL: 12103, '2XL': 12104, '3XL': 12105, '4XL': 24031, '5XL': 24164 },
+      },
+    },
+  },
+};
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
