@@ -1,63 +1,52 @@
 // netlify/functions/printify-order.js
 //
-// Listens for Snipcart's "order.completed" webhook, verifies it's really
-// from Snipcart, then creates a matching order in Printify for fulfillment.
+// Runs on Netlify's servers only. Snipcart calls this automatically whenever
+// an order is completed on your site. This function:
+//   1. Verifies the request genuinely came from Snipcart (not a forged call)
+//   2. Reads the items that were purchased
+//   3. Looks up the matching Printify product/variant (based on Size/Color
+//      the customer chose)
+//   4. Submits an order to Printify so it gets printed and shipped
+//
+// Required environment variables (Netlify dashboard -> Environment variables):
+//   SNIPCART_SECRET_API_KEY  - Snipcart secret key (Snipcart dashboard -> Store config -> API Keys -> Secret key)
+//   PRINTIFY_API_TOKEN       - same one used by get-products.js
+//   PRINTIFY_SHOP_ID         - same one used by get-products.js
+//
+// Snipcart setup (in Snipcart dashboard -> Store config -> Webhooks):
+//   Add a webhook for the "order.completed" event pointing to:
+//   https://YOUR-SITE.netlify.app/.netlify/functions/printify-order
+//
+// IMPORTANT CAVEAT:
+//   This only works correctly for products whose Snipcart item ID is a real
+//   Printify product ID — meaning the product came from the live Printify
+//   feed (get-products.js), not the static fallback cards or non-Printify
+//   items like the book or journal. Non-Printify items are skipped here and
+//   logged, so you know to fulfill them manually (as already planned for
+//   the book, via your own Lulu account).
 
-const productMap = {
-  shop_id: 28189021,
-  products: {
-    'breathe-metamorphosis': {
-      printify_product_id: '6a5303141e7f67c4f10ba979',
-      colors: {
-        'Military Green': { S: 12192, M: 12191, L: 12190, XL: 12193, '2XL': 12194, '3XL': 12195, '4XL': 24060, '5XL': 24194 },
-        'Red':            { S: 12024, M: 12023, L: 12022, XL: 12025, '2XL': 12026, '3XL': 12027, '4XL': 24005, '5XL': 24138 },
-      },
-    },
-    'compost-nature': {
-      printify_product_id: '6a525464773bfedc8c0bcc88',
-      colors: {
-        'Forest Green': { S: 12144, M: 12143, L: 12142, XL: 12145, '2XL': 12146, '3XL': 12147, '4XL': 24045, '5XL': 24178 },
-      },
-    },
-    'soil-in-my-veins': {
-      printify_product_id: '6a522d54773bfedc8c0ba8b9',
-      colors: {
-        'White': { S: 12102, M: 12101, L: 12100, XL: 12103, '2XL': 12104, '3XL': 12105, '4XL': 24031, '5XL': 24164 },
-      },
-    },
-    'if-i-must-break': {
-      printify_product_id: '6a522c799e0882f544002d39',
-      colors: {
-        'Natural': { S: 11982, M: 11981, L: 11980, XL: 11983, '2XL': 11984, '3XL': 11985, '4XL': 23991, '5XL': 24124 },
-      },
-    },
-    'daughters-of-the-storm': {
-      printify_product_id: '6a52235c773bfedc8c0ba219',
-      colors: {
-        'Black': { S: 12126, M: 12125, L: 12124, XL: 12127, '2XL': 12128, '3XL': 12129, '4XL': 24039, '5XL': 24171 },
-        'Navy':  { S: 11988, M: 11987, L: 11986, XL: 11989, '2XL': 11990, '3XL': 11991, '4XL': 23993, '5XL': 24126 },
-        'Maroon':{ S: 11976, M: 11975, L: 11974, XL: 11977, '2XL': 11978, '3XL': 11979, '4XL': 23989, '5XL': 24122 },
-      },
-    },
-    'the-inheritance': {
-      printify_product_id: '6a521fb45a237ba6d60985f6',
-      colors: {
-        'Black': { S: 12126, M: 12125, L: 12124, XL: 12127, '2XL': 12128, '3XL': 12129, '4XL': 24039, '5XL': 24171 },
-        'White': { S: 12102, M: 12101, L: 12100, XL: 12103, '2XL': 12104, '3XL': 12105, '4XL': 24031, '5XL': 24164 },
-      },
-    },
-  },
-};
+const PRINTIFY_API = "https://api.printify.com/v1";
 
-exports.handler = async (event) => {
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
+exports.handler = async function (event) {
+  if (event.httpMethod !== "POST") {
+    return { statusCode: 405, body: "Method not allowed" };
   }
 
-  // --- 1. Verify this request genuinely came from Snipcart ---
-  const token = event.headers['x-snipcart-requesttoken'];
+  const SNIPCART_SECRET = process.env.SNIPCART_SECRET_API_KEY;
+  const PRINTIFY_TOKEN = process.env.PRINTIFY_API_TOKEN;
+  const SHOP_ID = process.env.PRINTIFY_SHOP_ID;
+
+  if (!SNIPCART_SECRET || !PRINTIFY_TOKEN || !SHOP_ID) {
+    console.error("Missing required environment variables.");
+    return { statusCode: 500, body: "Server not configured." };
+  }
+
+  // --- 1. Verify this request really came from Snipcart ---
+  // Snipcart sends a one-time token in this header. We exchange it with
+  // Snipcart's own API to confirm it's valid before trusting the payload.
+  const token = event.headers["x-snipcart-requesttoken"];
   if (!token) {
-    return { statusCode: 401, body: 'Missing Snipcart request token' };
+    return { statusCode: 401, body: "Missing Snipcart request token." };
   }
 
   try {
@@ -66,116 +55,168 @@ exports.handler = async (event) => {
       {
         headers: {
           Authorization:
-            'Basic ' + Buffer.from(process.env.SNIPCART_SECRET_KEY + ':').toString('base64'),
+            "Basic " + Buffer.from(SNIPCART_SECRET + ":").toString("base64"),
         },
       }
     );
     if (!verifyRes.ok) {
-      return { statusCode: 401, body: 'Invalid Snipcart request token' };
+      return { statusCode: 401, body: "Invalid Snipcart request token." };
     }
   } catch (err) {
-    console.error('Snipcart verification failed:', err);
-    return { statusCode: 401, body: 'Could not verify Snipcart request' };
+    console.error("Snipcart token validation failed:", err);
+    return { statusCode: 401, body: "Could not validate request." };
   }
 
-  // --- 2. Only act on completed orders ---
-  const payload = JSON.parse(event.body);
-  if (payload.eventName !== 'order.completed') {
-    return { statusCode: 200, body: 'Ignored (not an order.completed event)' };
+  // --- 2. Parse the webhook payload ---
+  let payload;
+  try {
+    payload = JSON.parse(event.body);
+  } catch (err) {
+    return { statusCode: 400, body: "Invalid JSON payload." };
+  }
+
+  // Only act on completed orders; acknowledge and ignore everything else.
+  if (payload.eventName !== "order.completed") {
+    return { statusCode: 200, body: "Ignored event: " + payload.eventName };
   }
 
   const order = payload.content;
 
-  // --- 3. Translate each Snipcart cart item into a Printify line item ---
-  const lineItemsByProduct = {}; // group by printify_product_id since Printify orders are per-shop, multi-product is fine, but we validate per item
+  try {
+    const result = await submitOrderToPrintify(order, {
+      PRINTIFY_TOKEN,
+      SHOP_ID,
+    });
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ ok: true, ...result }),
+    };
+  } catch (err) {
+    console.error("Failed to submit order to Printify:", err);
+    // Return 200 anyway so Snipcart doesn't endlessly retry a failed
+    // conversion it can't fix on its own; the real error is in the logs.
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ ok: false, error: err.message }),
+    };
+  }
+};
+
+async function submitOrderToPrintify(order, { PRINTIFY_TOKEN, SHOP_ID }) {
+  const headers = {
+    Authorization: `Bearer ${PRINTIFY_TOKEN}`,
+    "Content-Type": "application/json",
+  };
 
   const lineItems = [];
-  for (const item of order.items) {
-    const productKey = item.id; // must match a key in printify-product-map.json
-    const product = productMap.products[productKey];
+  const skipped = [];
 
-    if (!product) {
-      console.error(`Unknown product key "${productKey}" — skipping item`);
+  for (const item of order.items || []) {
+    // A real Printify product ID looks like a 24-character hex string
+    // (Mongo-style ID). Anything else (e.g. "soil-in-my-veins-book") is a
+    // non-Printify item — skip it and flag it for manual fulfillment.
+    const looksLikePrintifyId = /^[a-f0-9]{20,24}$/i.test(item.id);
+    if (!looksLikePrintifyId) {
+      skipped.push(item.id);
       continue;
     }
 
-    // Pull Size (and Color, if this product has more than one) from Snipcart's custom fields
-    const customFields = item.customFields || [];
-    const sizeField = customFields.find((f) => f.name === 'Size');
-    const colorField = customFields.find((f) => f.name === 'Color');
+    const size = getCustomField(item, "Size");
+    const color = getCustomField(item, "Color");
 
-    const size = sizeField ? sizeField.value : null;
-    const colorNames = Object.keys(product.colors);
-    const color = colorField ? colorField.value : colorNames[0]; // single-color products don't need a Color field
-
-    const variantId = product.colors[color] && product.colors[color][size];
+    const variantId = await findVariantId(item.id, size, color, {
+      PRINTIFY_TOKEN,
+      SHOP_ID,
+    });
 
     if (!variantId) {
-      console.error(
-        `Could not resolve variant for "${productKey}" — color: ${color}, size: ${size}`
+      console.warn(
+        `Could not match a Printify variant for item ${item.id} (Size: ${size}, Color: ${color}). Skipping.`
       );
+      skipped.push(item.id);
       continue;
     }
 
     lineItems.push({
-      product_id: product.printify_product_id,
+      product_id: item.id,
       variant_id: variantId,
-      quantity: item.quantity,
+      quantity: item.quantity || 1,
     });
   }
 
   if (lineItems.length === 0) {
-    console.error('No valid line items resolved for order', order.invoiceNumber);
-    return { statusCode: 400, body: 'No valid line items' };
+    return { message: "No Printify-fulfillable items in this order.", skipped };
   }
 
-  // --- 4. Build the Printify order payload ---
-  const shipTo = order.shippingAddress || {};
-  const printifyOrder = {
-    external_id: order.invoiceNumber || order.token,
+  const shipping = order.shippingAddress || {};
+  const nameParts = String(shipping.fullName || order.billingAddress?.fullName || "")
+    .trim()
+    .split(" ");
+  const firstName = nameParts[0] || "Customer";
+  const lastName = nameParts.slice(1).join(" ") || "-";
+
+  const printifyOrderPayload = {
+    external_id: order.token || order.invoiceNumber,
     label: order.invoiceNumber,
     line_items: lineItems,
-    shipping_method: 1, // standard shipping; Printify picks the cheapest eligible option
-    send_shipping_notification: false,
+    shipping_method: 1, // standard shipping; adjust in Printify if needed
+    send_shipping_notification: true,
     address_to: {
-      first_name: shipTo.firstName || order.billingAddress?.firstName || '',
-      last_name: shipTo.lastName || order.billingAddress?.lastName || '',
+      first_name: firstName,
+      last_name: lastName,
       email: order.email,
-      phone: shipTo.phone || '',
-      country: shipTo.country,
-      region: shipTo.province || '',
-      address1: shipTo.address1,
-      address2: shipTo.address2 || '',
-      city: shipTo.city,
-      zip: shipTo.postalCode,
+      phone: shipping.phone || "",
+      country: shipping.country || "",
+      region: shipping.province || "",
+      address1: shipping.address1 || "",
+      address2: shipping.address2 || "",
+      city: shipping.city || "",
+      zip: shipping.postalCode || "",
     },
   };
 
-  // --- 5. Send it to Printify ---
-  try {
-    const printifyRes = await fetch(
-      `https://api.printify.com/v1/shops/${productMap.shop_id}/orders.json`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${process.env.PRINTIFY_API_TOKEN}`,
-        },
-        body: JSON.stringify(printifyOrder),
-      }
-    );
-
-    const result = await printifyRes.json();
-
-    if (!printifyRes.ok) {
-      console.error('Printify order creation failed:', result);
-      return { statusCode: 502, body: JSON.stringify(result) };
+  const res = await fetch(
+    `${PRINTIFY_API}/shops/${SHOP_ID}/orders.json`,
+    {
+      method: "POST",
+      headers,
+      body: JSON.stringify(printifyOrderPayload),
     }
+  );
 
-    console.log('Printify order created:', result.id);
-    return { statusCode: 200, body: JSON.stringify({ success: true, printifyOrderId: result.id }) };
-  } catch (err) {
-    console.error('Error sending order to Printify:', err);
-    return { statusCode: 500, body: 'Error sending order to Printify' };
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`Printify order creation failed (${res.status}): ${errText}`);
   }
-};
+
+  const created = await res.json();
+  return { message: "Order submitted to Printify.", printifyOrderId: created.id, skipped };
+}
+
+function getCustomField(item, name) {
+  const field = (item.customFields || []).find((f) => f.name === name);
+  return field ? field.value : null;
+}
+
+// Looks up a product's variants from Printify and finds the one matching
+// the chosen Size/Color, using the same "Color / Size" title format
+// get-products.js relies on.
+async function findVariantId(productId, size, color, { PRINTIFY_TOKEN, SHOP_ID }) {
+  const res = await fetch(
+    `${PRINTIFY_API}/shops/${SHOP_ID}/products/${productId}.json`,
+    {
+      headers: { Authorization: `Bearer ${PRINTIFY_TOKEN}` },
+    }
+  );
+  if (!res.ok) return null;
+
+  const product = await res.json();
+  const variants = product.variants || [];
+
+  const target = color && size ? `${color} / ${size}` : size || color;
+
+  const match = variants.find(
+    (v) => v.is_enabled && String(v.title).trim() === String(target).trim()
+  );
+  return match ? match.id : null;
+}
