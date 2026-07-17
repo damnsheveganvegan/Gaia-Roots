@@ -94,6 +94,16 @@ exports.handler = async function (event, context) {
           }
         });
 
+        // Per-variant pricing (e.g. 2XL+ often costs more than S-XL).
+        // Keyed the same way as variant titles: "Color / Size" or just
+        // "Size" when there's only one color, so the front-end can look
+        // up the exact price for whatever the customer picks.
+        const variantPrices = {};
+        (p.variants || []).forEach((v) => {
+          if (!v.is_enabled) return;
+          variantPrices[String(v.title).trim()] = Number((v.price / 100).toFixed(2));
+        });
+
         // General gallery fallback (deduped) in case color mapping comes
         // back empty for a product with only one color.
         const gallery = Array.from(
@@ -117,6 +127,7 @@ exports.handler = async function (event, context) {
           colors: Array.from(colors),
           imagesByColor,
           gallery,
+          variantPrices,
         };
       });
 
